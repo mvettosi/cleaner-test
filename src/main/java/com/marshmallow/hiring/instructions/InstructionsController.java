@@ -1,10 +1,10 @@
-package com.marshmallow.hiring;
+package com.marshmallow.hiring.instructions;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class Controller {
+public class InstructionsController {
 
     // TODO This is your entry point
     // You need to expose a POST endpoint on the "/instructions" path to match the contract expected by our tests.

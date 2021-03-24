@@ -1,4 +1,4 @@
-package com.marshmallow.hiring;
+package com.marshmallow.hiring.instructions;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +13,8 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(Controller.class)
-class ControllerTest {
+@WebMvcTest(InstructionsController.class)
+class InstructionsControllerTest {
 
     private static final MockHttpServletRequestBuilder REQUEST_BUILDER =
         request(HttpMethod.POST, "/instructions")
