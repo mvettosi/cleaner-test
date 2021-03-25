@@ -3,10 +3,12 @@ package com.marshmallow.hiring.instructions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import static com.marshmallow.hiring.instructions.InstructionsController.ENDPOINT_INSTRUCTIONS;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -17,12 +19,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class InstructionsControllerTest {
 
     private static final MockHttpServletRequestBuilder REQUEST_BUILDER =
-        request(HttpMethod.POST, "/instructions")
+        request(HttpMethod.POST, ENDPOINT_INSTRUCTIONS)
             .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
             .accept(APPLICATION_JSON);
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private InstructionsService instructionsService;
 
     // This test is here to ensure you have expose an endpoint on the right path for our automated tests running once you submit.
     // Please don't change it.
