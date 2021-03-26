@@ -2,11 +2,15 @@ package com.marshmallow.hiring.instructions;
 
 import com.marshmallow.hiring.instructions.exception.InvalidArgumentException;
 import com.marshmallow.hiring.instructions.model.GeneralErrorResponse;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NestedRuntimeException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -39,6 +43,41 @@ public class InstructionsExceptionHandler extends ResponseEntityExceptionHandler
         .body(GeneralErrorResponse.builder()
             .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
             .message(INVALID_ARGUMENT_PREFIX + e.getMessage())
+            .build());
+  }
+
+  /**
+   * Provides handling of {@link MethodArgumentNotValidException} This method needed to override the
+   * existing one to avoid the "Ambiguous @ExceptionHandler method mapped" error.
+   *
+   * @param ex - runtime MethodArgumentNotValidException
+   * @return - error response with exception message in the body
+   */
+  @Override
+  public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+      HttpHeaders headers, HttpStatus status, WebRequest request) {
+    log.error(
+        "Spring Validation caught MethodArgumentNotValidException. Mapping to error response...",
+        ex);
+
+    BindingResult bindingResult = ex.getBindingResult();
+    List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+    StringBuilder stringBuilder = new StringBuilder();
+    for (FieldError error : fieldErrors) {
+      stringBuilder
+          .append(INVALID_ARGUMENT_PREFIX)
+          .append(error.getField())
+          .append(". Reason: ")
+          .append(error.getDefaultMessage());
+    }
+
+    // It is safe to include the exception message for this specific exception because it is
+    // specifically designed to only contain information to be exposed to the outside.
+    return ResponseEntity
+        .status(HttpStatus.BAD_REQUEST)
+        .body(GeneralErrorResponse.builder()
+            .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
+            .message(stringBuilder.toString())
             .build());
   }
 

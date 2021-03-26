@@ -3,6 +3,8 @@ package com.marshmallow.hiring.instructions.model;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.marshmallow.hiring.instructions.deserializers.NavigationDeserializer;
 import java.util.List;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
@@ -15,11 +17,15 @@ public class Instructions {
    * The size and shape of the area to operate on. It is represented by to top-right-most allowed
    * position.
    */
+  @Valid
+  @NotNull
   private Position areaSize;
 
   /**
    * The starting position of the cleaner.
    */
+  @Valid
+  @NotNull
   private Position startingPosition;
 
   /**
@@ -30,6 +36,7 @@ public class Instructions {
    * Note: adding extra functionality, like calculating the percentage of cleaned patches, might
    * require the addition of validation of their position.
    */
+  @Valid
   private List<Position> oilPatches;
 
   /**

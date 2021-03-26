@@ -2,6 +2,7 @@ package com.marshmallow.hiring.instructions;
 
 import com.marshmallow.hiring.instructions.model.CleaningResult;
 import com.marshmallow.hiring.instructions.model.Instructions;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -33,7 +34,7 @@ public class InstructionsController {
       value = ENDPOINT_INSTRUCTIONS,
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public CleaningResult instructions(@RequestBody Instructions instructions) {
+  public CleaningResult instructions(@Valid @RequestBody Instructions instructions) {
     log.debug("Received: " + instructions.toString());
     return instructionsService.calculateFinalState(instructions);
   }
