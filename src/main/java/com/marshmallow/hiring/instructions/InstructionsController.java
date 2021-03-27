@@ -1,5 +1,6 @@
 package com.marshmallow.hiring.instructions;
 
+import com.marshmallow.hiring.instructions.exception.InvalidMovementException;
 import com.marshmallow.hiring.instructions.model.CleaningResult;
 import com.marshmallow.hiring.instructions.model.Instructions;
 import javax.validation.Valid;
@@ -34,7 +35,8 @@ public class InstructionsController {
       value = ENDPOINT_INSTRUCTIONS,
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public CleaningResult instructions(@Valid @RequestBody Instructions instructions) {
+  public CleaningResult instructions(@Valid @RequestBody Instructions instructions)
+      throws InvalidMovementException {
     log.debug("Received: " + instructions.toString());
     return instructionsService.calculateFinalState(instructions);
   }

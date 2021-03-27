@@ -1,8 +1,11 @@
 package com.marshmallow.hiring.instructions;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.marshmallow.hiring.instructions.exception.InvalidArgumentException;
+import com.marshmallow.hiring.instructions.exception.InvalidMovementException;
 import com.marshmallow.hiring.instructions.model.GeneralErrorResponse;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NestedRuntimeException;
 import org.springframework.http.HttpHeaders;
@@ -24,6 +27,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class InstructionsExceptionHandler extends ResponseEntityExceptionHandler {
 
   private static final String INVALID_ARGUMENT_PREFIX = "Invalid argument received: ";
+  private static final String INVALID_MOVEMENT_MESSAGE = "The provided instructions would lead the cleaner out of the specified cleaning area. Please check them and try again as we don't want to waste drones recovering lost cleaners...";
+  private static final String PARSING_ERROR = "An error occurred while parsing the request body";
+  private static final String GENERIC_INTERNAL_ERROR = "An internal error occurred";
 
   /**
    * Provides handling of {@link InvalidArgumentException}
@@ -47,6 +53,26 @@ public class InstructionsExceptionHandler extends ResponseEntityExceptionHandler
   }
 
   /**
+   * Provides handling of {@link InvalidMovementException}
+   *
+   * @param e - runtime InvalidMovementException
+   * @return - error response with exception message in the body
+   */
+  @ExceptionHandler(InvalidMovementException.class)
+  public ResponseEntity<GeneralErrorResponse> handleInvalidMovementException(
+      InvalidMovementException e) {
+    log.error("Instructions service caught InvalidMovementException. Mapping to error response...",
+        e);
+
+    return ResponseEntity
+        .status(HttpStatus.BAD_REQUEST)
+        .body(GeneralErrorResponse.builder()
+            .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
+            .message(INVALID_MOVEMENT_MESSAGE)
+            .build());
+  }
+
+  /**
    * Provides handling of {@link MethodArgumentNotValidException} This method needed to override the
    * existing one to avoid the "Ambiguous @ExceptionHandler method mapped" error.
    *
@@ -62,22 +88,17 @@ public class InstructionsExceptionHandler extends ResponseEntityExceptionHandler
 
     BindingResult bindingResult = ex.getBindingResult();
     List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-    StringBuilder stringBuilder = new StringBuilder();
-    for (FieldError error : fieldErrors) {
-      stringBuilder
-          .append(INVALID_ARGUMENT_PREFIX)
-          .append(error.getField())
-          .append(". Reason: ")
-          .append(error.getDefaultMessage());
-    }
 
-    // It is safe to include the exception message for this specific exception because it is
-    // specifically designed to only contain information to be exposed to the outside.
+    String message = fieldErrors.stream()
+        .map(fieldError -> INVALID_ARGUMENT_PREFIX + fieldError.getField() + ". Reason: "
+            + fieldError.getDefaultMessage())
+        .collect(Collectors.joining(System.getProperty("line.separator")));
+
     return ResponseEntity
         .status(HttpStatus.BAD_REQUEST)
         .body(GeneralErrorResponse.builder()
             .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
-            .message(stringBuilder.toString())
+            .message(message)
             .build());
   }
 
@@ -114,7 +135,7 @@ public class InstructionsExceptionHandler extends ResponseEntityExceptionHandler
   // Visible for testing
   protected ResponseEntity<Object> buildResponseEntityFromInternalError(Exception ex,
       HttpHeaders headers, HttpStatus status) {
-    String message = "An internal error occurred";
+    String message = GENERIC_INTERNAL_ERROR;
 
     // If root cause was thrown by our custom deserializer, include its explanation message
     if (ex instanceof NestedRuntimeException) {
@@ -122,6 +143,8 @@ public class InstructionsExceptionHandler extends ResponseEntityExceptionHandler
       Throwable root = httpEx.getRootCause();
       if (root instanceof InvalidArgumentException) {
         message = INVALID_ARGUMENT_PREFIX + root.getMessage();
+      } else if (root instanceof JsonParseException) {
+        message = PARSING_ERROR;
       }
     }
 

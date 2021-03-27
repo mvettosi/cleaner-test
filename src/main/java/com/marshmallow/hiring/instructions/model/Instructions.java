@@ -3,6 +3,7 @@ package com.marshmallow.hiring.instructions.model;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.marshmallow.hiring.instructions.deserializers.NavigationDeserializer;
 import java.util.List;
+import java.util.Set;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
@@ -29,15 +30,18 @@ public class Instructions {
   private Position startingPosition;
 
   /**
-   * List of positions of the oil patches present in the provided area. If any of these patches are
-   * outside the boundaries of the provided area, they will be ignored as they are not preventing
-   * the calculation of how many will be cleaned by the navigation operation.
+   * Positions of the oil patches present in the provided area. If any of these patches are outside
+   * the boundaries of the provided area, they will be ignored as they are not preventing the
+   * calculation of how many will be cleaned by the navigation operation.
+   * <p>
+   * Since two patches cannot be in the same spot, the set collection is used to ensure that
+   * duplicates are removed.
    * <p>
    * Note: adding extra functionality, like calculating the percentage of cleaned patches, might
    * require the addition of validation of their position.
    */
   @Valid
-  private List<Position> oilPatches;
+  private Set<Position> oilPatches;
 
   /**
    * The list of navigation instructions to use when calculating the final state of the cleaner and
