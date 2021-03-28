@@ -8,6 +8,9 @@ import lombok.Data;
 
 /**
  * Data transfer object used as request body of the instructions endpoint.
+ * <p>
+ * The coordinates of the various fields are here represented as generic Objects to allow the
+ * generation of error messages that are more relevant to the user.
  */
 @Data
 public class InstructionsRequest {

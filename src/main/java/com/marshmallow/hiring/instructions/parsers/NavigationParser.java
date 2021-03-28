@@ -9,8 +9,8 @@ import lombok.NonNull;
 import org.springframework.stereotype.Component;
 
 /**
- * Spring Component that provides the functionality to parse string into an internal representation
- * of the navigation instructions for a cleaner.
+ * Spring Component that provides the functionality to parse a string into an internal
+ * representation of the navigation instructions for a cleaner.
  * <p>
  * If the provided format is not the one currently expected, {@link InvalidArgumentException} is
  * thrown.

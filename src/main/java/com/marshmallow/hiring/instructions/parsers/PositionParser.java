@@ -49,13 +49,13 @@ public class PositionParser {
     if (!(obj instanceof Integer)) {
       throw new InvalidArgumentException("Coordinate '" + obj + "' is not an integer");
     }
-    int coord = (Integer) obj;
+    int coordinate = (Integer) obj;
 
-    if (coord < 0) {
-      throw new InvalidArgumentException("Coordinate '" + coord + "' is not allowed");
+    if (coordinate < 0) {
+      throw new InvalidArgumentException("Coordinate '" + coordinate + "' is not allowed");
     }
 
-    return coord;
+    return coordinate;
   }
 
   /**
@@ -69,8 +69,8 @@ public class PositionParser {
   public Set<Position> parseMultiple(@NonNull Set<List<Object>> positionsRaw)
       throws InvalidArgumentException {
     Set<Position> result = new HashSet<>();
-    for (List<Object> coords : positionsRaw) {
-      result.add(parse(coords));
+    for (List<Object> coordinates : positionsRaw) {
+      result.add(parse(coordinates));
     }
     return result;
   }

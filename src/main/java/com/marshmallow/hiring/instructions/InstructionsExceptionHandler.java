@@ -28,7 +28,6 @@ public class InstructionsExceptionHandler extends ResponseEntityExceptionHandler
 
   private static final String INVALID_ARGUMENT_PREFIX = "Invalid argument received: ";
   private static final String INVALID_MOVEMENT_MESSAGE = "The provided instructions would lead the cleaner out of the specified cleaning area. Please check them and try again as we don't want to waste drones recovering lost cleaners...";
-  private static final String PARSING_ERROR = "An error occurred while parsing the request body";
   private static final String GENERIC_INTERNAL_ERROR = "An internal error occurred";
   private static final String MALFORMED_JSON_REQUEST = "Malformed JSON request";
 
@@ -41,7 +40,7 @@ public class InstructionsExceptionHandler extends ResponseEntityExceptionHandler
   @ExceptionHandler(InvalidArgumentException.class)
   public ResponseEntity<GeneralErrorResponse> handleInvalidArgumentException(
       InvalidArgumentException e) {
-    log.error("Exception mapper caught InvalidArgumentException. Mapping to error response...", e);
+    log.error("Exception handler caught InvalidArgumentException. Mapping to error response...", e);
 
     // It is safe to include the exception message for this specific exception because it is
     // specifically designed to only contain information to be exposed to the outside.
@@ -63,8 +62,7 @@ public class InstructionsExceptionHandler extends ResponseEntityExceptionHandler
   @ExceptionHandler(InvalidMovementException.class)
   public ResponseEntity<GeneralErrorResponse> handleInvalidMovementException(
       InvalidMovementException e) {
-    log.error("Instructions service caught InvalidMovementException. Mapping to error response...",
-        e);
+    log.error("Exception handler caught InvalidMovementException. Mapping to error response...", e);
 
     return ResponseEntity
         .status(HttpStatus.BAD_REQUEST)
@@ -76,8 +74,11 @@ public class InstructionsExceptionHandler extends ResponseEntityExceptionHandler
   }
 
   /**
-   * Provides handling of {@link MethodArgumentNotValidException} This method needed to override the
-   * existing one to avoid the "Ambiguous @ExceptionHandler method mapped" error.
+   * Provides handling of {@link MethodArgumentNotValidException}, which is expected to be thrown
+   * when receiving a json request that violates the annotated constraints.
+   * <p>
+   * This method needed to override the existing one to avoid the "Ambiguous @ExceptionHandler
+   * method mapped" error.
    *
    * @param ex - runtime MethodArgumentNotValidException
    * @return - error response with exception message in the body
@@ -86,7 +87,7 @@ public class InstructionsExceptionHandler extends ResponseEntityExceptionHandler
   public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
       HttpHeaders headers, HttpStatus status, WebRequest request) {
     log.error(
-        "Spring Validation caught MethodArgumentNotValidException. Mapping to error response...",
+        "Exception handler caught MethodArgumentNotValidException. Mapping to error response...",
         ex);
 
     BindingResult bindingResult = ex.getBindingResult();
@@ -106,6 +107,16 @@ public class InstructionsExceptionHandler extends ResponseEntityExceptionHandler
             .build());
   }
 
+  /**
+   * Provides handling of {@link HttpMessageNotReadableException}, which is expected to be thrown
+   * when receiving a malformed json request.
+   * <p>
+   * This method needed to override the existing one to avoid the "Ambiguous @ExceptionHandler
+   * method mapped" error.
+   *
+   * @param ex - runtime HttpMessageNotReadableException
+   * @return - error response with exception message in the body
+   */
   @Override
   protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
       HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -123,21 +134,21 @@ public class InstructionsExceptionHandler extends ResponseEntityExceptionHandler
   }
 
   /**
-   * Provides handling of Generic Exception.
+   * Provides handling for any generic Exception.
    *
    * @param e - generic exception
    * @return error response with default message in the body.
    */
   @ExceptionHandler(Exception.class)
   public ResponseEntity<GeneralErrorResponse> handleException(Exception e) {
-
     log.error("Generic application exception. Details: {}", e.getMessage(), e);
+
     return ResponseEntity
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .contentType(MediaType.APPLICATION_JSON)
         .body(GeneralErrorResponse.builder()
             .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
-            .message("An internal error has occurred")
+            .message(GENERIC_INTERNAL_ERROR)
             .build());
   }
 

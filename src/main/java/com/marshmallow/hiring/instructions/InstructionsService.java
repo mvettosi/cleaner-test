@@ -36,14 +36,16 @@ public class InstructionsService {
    */
   public CleaningResult calculateFinalState(InstructionsRequest instructionsRequest)
       throws InvalidMovementException, InvalidArgumentException {
+    // Parse the request body and create a session for it
     Instructions instructions = parse(instructionsRequest);
     CleaningSession session = new CleaningSession(instructions.getAreaSize(),
         instructions.getStartingPosition(), instructions.getOilPatches());
 
+    // Apply the instructions and retrieve the final cleaner position
     session.applyInstructions(instructions.getNavigationInstructions());
-
     Position finalPosition = session.getCleanerPosition();
 
+    // Create and return a response body
     return CleaningResult.builder()
         .finalPosition(List.of(finalPosition.getX(), finalPosition.getY()))
         .oilPatchesCleaned(session.getCleanedOilPatches().size()).build();
