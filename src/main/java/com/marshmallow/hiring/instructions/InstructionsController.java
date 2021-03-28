@@ -37,7 +37,7 @@ public class InstructionsController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public CleaningResult instructions(@Valid @RequestBody Instructions instructions)
       throws InvalidMovementException {
-    log.debug("Received: " + instructions.toString());
+    log.info("Received instructions request: " + instructions.toString());
     return instructionsService.calculateFinalState(instructions);
   }
 }
