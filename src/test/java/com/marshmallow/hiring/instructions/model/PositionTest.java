@@ -5,7 +5,7 @@ import static com.marshmallow.hiring.instructions.model.NavigationType.GO_NORTH;
 import static com.marshmallow.hiring.instructions.model.NavigationType.GO_SOUTH;
 import static com.marshmallow.hiring.instructions.model.NavigationType.GO_WEST;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.marshmallow.hiring.instructions.exception.InvalidMovementException;
 import org.junit.jupiter.api.Test;

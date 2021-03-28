@@ -4,9 +4,7 @@ import com.marshmallow.hiring.instructions.business.CleaningSession;
 import com.marshmallow.hiring.instructions.exception.InvalidMovementException;
 import com.marshmallow.hiring.instructions.model.CleaningResult;
 import com.marshmallow.hiring.instructions.model.Instructions;
-import javax.validation.Valid;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
 /**
  * Service class for the {@link InstructionsController} http controller.

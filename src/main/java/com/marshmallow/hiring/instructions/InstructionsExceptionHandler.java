@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NestedRuntimeException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -46,6 +47,7 @@ public class InstructionsExceptionHandler extends ResponseEntityExceptionHandler
     // specifically designed to only contain information to be exposed to the outside.
     return ResponseEntity
         .status(HttpStatus.BAD_REQUEST)
+        .contentType(MediaType.APPLICATION_JSON)
         .body(GeneralErrorResponse.builder()
             .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
             .message(INVALID_ARGUMENT_PREFIX + e.getMessage())
@@ -66,6 +68,7 @@ public class InstructionsExceptionHandler extends ResponseEntityExceptionHandler
 
     return ResponseEntity
         .status(HttpStatus.BAD_REQUEST)
+        .contentType(MediaType.APPLICATION_JSON)
         .body(GeneralErrorResponse.builder()
             .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
             .message(INVALID_MOVEMENT_MESSAGE)
@@ -96,6 +99,7 @@ public class InstructionsExceptionHandler extends ResponseEntityExceptionHandler
 
     return ResponseEntity
         .status(HttpStatus.BAD_REQUEST)
+        .contentType(MediaType.APPLICATION_JSON)
         .body(GeneralErrorResponse.builder()
             .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
             .message(message)
@@ -114,6 +118,7 @@ public class InstructionsExceptionHandler extends ResponseEntityExceptionHandler
     log.error("Generic application exception. Details: {}", e.getMessage(), e);
     return ResponseEntity
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .contentType(MediaType.APPLICATION_JSON)
         .body(GeneralErrorResponse.builder()
             .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
             .message("An internal error has occurred")
@@ -149,6 +154,7 @@ public class InstructionsExceptionHandler extends ResponseEntityExceptionHandler
     }
 
     return ResponseEntity.status(status)
+        .contentType(MediaType.APPLICATION_JSON)
         .headers(headers)
         .body(GeneralErrorResponse.builder()
             .error(status.getReasonPhrase())

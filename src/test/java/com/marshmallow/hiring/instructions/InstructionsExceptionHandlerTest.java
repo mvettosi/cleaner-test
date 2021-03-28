@@ -12,10 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -27,7 +27,7 @@ class InstructionsExceptionHandlerTest {
 
   private static final String TEST_MSG = "test message";
 
-  private InstructionsExceptionHandler underTest = new InstructionsExceptionHandler();
+  private final InstructionsExceptionHandler underTest = new InstructionsExceptionHandler();
 
   @Test
   void handleInvalidArgumentException() {
@@ -40,6 +40,7 @@ class InstructionsExceptionHandlerTest {
 
     // Assert
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    assertThat(response.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
     GeneralErrorResponse actual = response.getBody();
     assertThat(actual.getError()).isEqualTo(HttpStatus.BAD_REQUEST.getReasonPhrase());
     assertThat(actual.getMessage()).isNotEqualTo(TEST_MSG);
@@ -56,6 +57,7 @@ class InstructionsExceptionHandlerTest {
 
     // Assert
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    assertThat(response.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
     GeneralErrorResponse actual = response.getBody();
     assertThat(actual.getError()).isEqualTo(HttpStatus.BAD_REQUEST.getReasonPhrase());
     assertThat(actual.getMessage()).isNotEqualTo(TEST_MSG);
@@ -69,7 +71,8 @@ class InstructionsExceptionHandlerTest {
     bindingResult.addError(error);
     MethodParameter methodParameter = mock(MethodParameter.class);
     doReturn(mock(Executable.class)).when(methodParameter).getExecutable();
-    MethodArgumentNotValidException exception = new MethodArgumentNotValidException(methodParameter, bindingResult);
+    MethodArgumentNotValidException exception = new MethodArgumentNotValidException(methodParameter,
+        bindingResult);
 
     // Act
     ResponseEntity<Object> response = underTest
@@ -78,6 +81,7 @@ class InstructionsExceptionHandlerTest {
 
     // Assert
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    assertThat(response.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
     Object body = response.getBody();
     assertThat(body).isInstanceOf(GeneralErrorResponse.class);
     GeneralErrorResponse actual = (GeneralErrorResponse) body;
@@ -97,6 +101,7 @@ class InstructionsExceptionHandlerTest {
 
     // Assert
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+    assertThat(response.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
     GeneralErrorResponse actual = response.getBody();
     expected.setTime(actual.getTime()); // Ignore time difference
     assertThat(actual).isEqualTo(expected);
@@ -116,6 +121,7 @@ class InstructionsExceptionHandlerTest {
 
     // Assert
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    assertThat(response.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
     assertThat(response.getBody()).isInstanceOf(GeneralErrorResponse.class);
     GeneralErrorResponse actual = (GeneralErrorResponse) response.getBody();
     expected.setTime(actual.getTime()); // Ignore time difference
@@ -137,6 +143,7 @@ class InstructionsExceptionHandlerTest {
 
     // Assert
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+    assertThat(response.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
     assertThat(response.getBody()).isInstanceOf(GeneralErrorResponse.class);
     GeneralErrorResponse actual = (GeneralErrorResponse) response.getBody();
     expected.setTime(actual.getTime()); // Ignore time difference

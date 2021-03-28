@@ -8,7 +8,6 @@ import com.marshmallow.hiring.instructions.exception.InvalidArgumentException;
 import com.marshmallow.hiring.instructions.model.NavigationType;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +21,7 @@ import java.util.Map;
  * thrown.
  */
 public class NavigationDeserializer extends JsonDeserializer<List<NavigationType>> {
+
   private static final Map<Character, NavigationType> CMD_MAPPING = Map.of(
       'N', NavigationType.GO_NORTH,
       'S', NavigationType.GO_SOUTH,

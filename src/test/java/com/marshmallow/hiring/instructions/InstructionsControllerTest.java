@@ -3,9 +3,7 @@ package com.marshmallow.hiring.instructions;
 import static com.marshmallow.hiring.instructions.InstructionsController.ENDPOINT_INSTRUCTIONS;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -16,7 +14,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.marshmallow.hiring.instructions.model.Instructions;
-import java.lang.reflect.Executable;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -58,6 +55,7 @@ class InstructionsControllerTest {
     // Act
     // Assert
     ResultActions resultActions = mockMvc.perform(builder.content(BASIC_CASE_REQUEST))
+        .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
         .andExpect(status().isUnsupportedMediaType());
     checkErrorBody(resultActions);
   }
@@ -71,6 +69,7 @@ class InstructionsControllerTest {
     // Act
     // Assert
     ResultActions resultActions = mockMvc.perform(builder.content(BASIC_CASE_REQUEST))
+        .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
         .andExpect(status().isUnsupportedMediaType());
     checkErrorBody(resultActions);
   }
@@ -84,6 +83,7 @@ class InstructionsControllerTest {
     // Assert
     ResultActions resultActions = mockMvc.perform(REQUEST_BUILDER.content(requestBody))
         .andExpect(status().isBadRequest())
+        .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
         .andExpect(content().contentType(APPLICATION_JSON_VALUE));
     checkErrorBody(resultActions);
   }
@@ -97,6 +97,7 @@ class InstructionsControllerTest {
     // Assert
     ResultActions resultActions = mockMvc.perform(REQUEST_BUILDER.content(requestBody))
         .andExpect(status().isBadRequest())
+        .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
         .andExpect(content().contentType(APPLICATION_JSON_VALUE));
     checkErrorBody(resultActions);
   }
@@ -110,6 +111,7 @@ class InstructionsControllerTest {
     // Assert
     ResultActions resultActions = mockMvc.perform(REQUEST_BUILDER.content(requestBody))
         .andExpect(status().isBadRequest())
+        .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
         .andExpect(content().contentType(APPLICATION_JSON_VALUE));
     checkErrorBody(resultActions);
   }
@@ -123,6 +125,7 @@ class InstructionsControllerTest {
     // Assert
     ResultActions resultActions = mockMvc.perform(REQUEST_BUILDER.content(requestBody))
         .andExpect(status().isBadRequest())
+        .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
         .andExpect(content().contentType(APPLICATION_JSON_VALUE));
     checkErrorBody(resultActions);
   }
@@ -136,6 +139,7 @@ class InstructionsControllerTest {
     // Assert
     ResultActions resultActions = mockMvc.perform(REQUEST_BUILDER.content(requestBody))
         .andExpect(status().isBadRequest())
+        .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
         .andExpect(content().contentType(APPLICATION_JSON_VALUE));
     checkErrorBody(resultActions);
   }
@@ -149,6 +153,7 @@ class InstructionsControllerTest {
     // Assert
     ResultActions resultActions = mockMvc.perform(REQUEST_BUILDER.content(requestBody))
         .andExpect(status().isBadRequest())
+        .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
         .andExpect(content().contentType(APPLICATION_JSON_VALUE));
     checkErrorBody(resultActions);
   }
@@ -164,6 +169,7 @@ class InstructionsControllerTest {
     // Assert
     ResultActions resultActions = mockMvc.perform(REQUEST_BUILDER.content(requestBody))
         .andExpect(status().isInternalServerError())
+        .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
         .andExpect(content().contentType(APPLICATION_JSON_VALUE));
     checkErrorBody(resultActions);
   }

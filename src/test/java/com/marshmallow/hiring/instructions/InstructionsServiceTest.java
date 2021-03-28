@@ -1,12 +1,8 @@
 package com.marshmallow.hiring.instructions;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.marshmallow.hiring.instructions.exception.InvalidMovementException;
 import com.marshmallow.hiring.instructions.model.Instructions;
-import com.marshmallow.hiring.instructions.model.Position;
-import java.util.List;
-import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 class InstructionsServiceTest {
