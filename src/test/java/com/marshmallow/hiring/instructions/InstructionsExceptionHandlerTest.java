@@ -93,7 +93,7 @@ class InstructionsExceptionHandlerTest {
   void handleException() {
     // Arrange
     GeneralErrorResponse expected = GeneralErrorResponse.builder().error("Internal Server Error")
-        .message("An internal error has occurred").build();
+        .message("An internal error occurred").build();
     Exception exception = new Exception(TEST_MSG);
 
     // Act
