@@ -21,7 +21,7 @@ The application only require Java 11 to be installed and available to the enviro
 
 # Test
 
-The application has 47 automated tests, covering all the relevant business logic lines, and they can be all launched using
+The application showcases a 100% test coverage on all the relevant business logic (some generated code from Lombok might be missed by coverage analyzers), and they can be all launched using
 ```shell
 ./mvnw test
 ```
@@ -42,3 +42,5 @@ There were, however, a few exceptions to the most common conventions regarding r
 - The controller and the service classes are not abstracted behind an Interface, as they would be in a normal project, in an attempt to keep the source count small.
 - There are no end-to-end tests. This is because it was judged that at this stage the project lacks a real deployment specification like http security, load balancing, etc. Moreover, effective end-to-end tests are often written in a separate language/framework, which is outside the scope of this test.
 - For similar reasons, performance tests were also skipped.
+- Regex pattern on the request body's navigation instructions is not being applied to allow generating an error message that is more relevant to the user.
+- A version of this implementation that uses custom deserializers was initially implemented and is still available in the `alternative/custom-deserializers` branch. While the final implementation with "manual" parsers is simpler to read and more streamlined with the rest of the application, the custom deserializers provided a single point of control for the format of the request body, as well as an easier way to support multiple alternative formats if desired. For these reasons, it was judged worth to provide the alternative implementation, too, for reference. 

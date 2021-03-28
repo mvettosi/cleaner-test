@@ -1,8 +1,9 @@
 package com.marshmallow.hiring.instructions;
 
+import com.marshmallow.hiring.instructions.exception.InvalidArgumentException;
 import com.marshmallow.hiring.instructions.exception.InvalidMovementException;
 import com.marshmallow.hiring.instructions.model.CleaningResult;
-import com.marshmallow.hiring.instructions.model.Instructions;
+import com.marshmallow.hiring.instructions.model.InstructionsRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,8 +36,8 @@ public class InstructionsController {
       value = ENDPOINT_INSTRUCTIONS,
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public CleaningResult instructions(@Valid @RequestBody Instructions instructions)
-      throws InvalidMovementException {
+  public CleaningResult instructions(@Valid @RequestBody InstructionsRequest instructions)
+      throws InvalidMovementException, InvalidArgumentException {
     log.info("Received instructions request: " + instructions.toString());
     return instructionsService.calculateFinalState(instructions);
   }

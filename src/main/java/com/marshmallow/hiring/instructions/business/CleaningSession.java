@@ -34,7 +34,7 @@ public class CleaningSession {
    */
   public CleaningSession(@NonNull Position areaSize,
       @NonNull Position cleanerPosition,
-      @NonNull Set<Position> remainingOilPatches) {
+      @NonNull Set<Position> remainingOilPatches) throws InvalidArgumentException {
     this.areaSize = areaSize;
     this.cleanerPosition = cleanerPosition;
     this.remainingOilPatches = new HashSet<>(remainingOilPatches);

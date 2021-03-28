@@ -108,27 +108,6 @@ class InstructionsExceptionHandlerTest {
   }
 
   @Test
-  void buildResponseEntityFromInternalError_InvalidArgument() {
-    // Arrange
-    GeneralErrorResponse expected = GeneralErrorResponse.builder().error("Bad Request")
-        .message("Invalid argument received: " + TEST_MSG).build();
-    HttpMessageNotReadableException exception = new HttpMessageNotReadableException("Prefix: ",
-        new InvalidArgumentException(TEST_MSG), null);
-
-    // Act
-    ResponseEntity<Object> response = underTest
-        .buildResponseEntityFromInternalError(exception, new HttpHeaders(), HttpStatus.BAD_REQUEST);
-
-    // Assert
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-    assertThat(response.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
-    assertThat(response.getBody()).isInstanceOf(GeneralErrorResponse.class);
-    GeneralErrorResponse actual = (GeneralErrorResponse) response.getBody();
-    expected.setTime(actual.getTime()); // Ignore time difference
-    assertThat(actual).isEqualTo(expected);
-  }
-
-  @Test
   void buildResponseEntityFromInternalError_GeneralException() {
     // Arrange
     GeneralErrorResponse expected = GeneralErrorResponse.builder().error("Internal Server Error")

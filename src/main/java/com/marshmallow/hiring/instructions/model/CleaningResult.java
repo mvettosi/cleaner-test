@@ -1,5 +1,6 @@
 package com.marshmallow.hiring.instructions.model;
 
+import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 
@@ -13,7 +14,7 @@ public class CleaningResult {
   /**
    * The final position of the cleaner.
    */
-  Position finalPosition;
+  List<Integer> finalPosition;
 
   /**
    * The amount of oil patches that were cleaned during the cleaning operations.

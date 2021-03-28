@@ -6,8 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 
 /**
- * Data transfer object used to return an error response in a consistent way across the various
- * endpoints provided.
+ * Data transfer object used to return a consistent error response regardless of how the error was
+ * generated.
  */
 @Data
 @Builder

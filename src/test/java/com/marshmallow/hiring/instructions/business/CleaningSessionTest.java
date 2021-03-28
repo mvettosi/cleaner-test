@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 class CleaningSessionTest {
 
   @Test
-  void constructor_StartNoPatch() {
+  void constructor_StartNoPatch() throws InvalidArgumentException {
     // Arrange
     Position area = new Position(5, 5);
     Position startingPosition = new Position(1, 2);
@@ -34,7 +34,7 @@ class CleaningSessionTest {
   }
 
   @Test
-  void constructor_StartOnPatch() {
+  void constructor_StartOnPatch() throws InvalidArgumentException {
     // Arrange
     Position area = new Position(5, 5);
     Position startingPosition = new Position(3, 3);
@@ -102,7 +102,7 @@ class CleaningSessionTest {
   }
 
   @Test
-  void constructor_NoPatches() {
+  void constructor_NoPatches() throws InvalidArgumentException {
     // Arrange
     Position area = new Position(5, 5);
     Position startingPosition = new Position(1, 2);
@@ -156,7 +156,7 @@ class CleaningSessionTest {
   }
 
   @Test
-  void applyInstructions_NullInstructions() {
+  void applyInstructions_NullInstructions() throws InvalidArgumentException {
     // Arrange
     Position area = new Position(5, 5);
     Position startingPosition = new Position(3, 3);
@@ -171,7 +171,8 @@ class CleaningSessionTest {
   }
 
   @Test
-  void applyInstructions_EmptyInstructions() throws InvalidMovementException {
+  void applyInstructions_EmptyInstructions()
+      throws InvalidMovementException, InvalidArgumentException {
     // Arrange
     Position area = new Position(5, 5);
     Position startingPosition = new Position(1, 2);
@@ -188,7 +189,7 @@ class CleaningSessionTest {
   }
 
   @Test
-  void applyInstructions_XOutOfBoundsInstructions() {
+  void applyInstructions_XOutOfBoundsInstructions() throws InvalidArgumentException {
     // Arrange
     Position area = new Position(5, 5);
     Position startingPosition = new Position(1, 2);
@@ -202,7 +203,7 @@ class CleaningSessionTest {
   }
 
   @Test
-  void applyInstructions_YOutOfBoundsInstructions() {
+  void applyInstructions_YOutOfBoundsInstructions() throws InvalidArgumentException {
     // Arrange
     Position area = new Position(5, 5);
     Position startingPosition = new Position(1, 2);
@@ -216,7 +217,8 @@ class CleaningSessionTest {
   }
 
   @Test
-  void applyInstructions_NonCleaningInstructions() throws InvalidMovementException {
+  void applyInstructions_NonCleaningInstructions()
+      throws InvalidMovementException, InvalidArgumentException {
     // Arrange
     Position area = new Position(5, 5);
     Position startingPosition = new Position(1, 2);
@@ -234,7 +236,8 @@ class CleaningSessionTest {
   }
 
   @Test
-  void applyInstructions_CleaningInstructions() throws InvalidMovementException {
+  void applyInstructions_CleaningInstructions()
+      throws InvalidMovementException, InvalidArgumentException {
     // Arrange
     Position area = new Position(5, 5);
     Position startingPosition = new Position(1, 2);

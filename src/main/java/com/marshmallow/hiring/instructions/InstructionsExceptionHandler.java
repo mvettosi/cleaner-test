@@ -1,17 +1,16 @@
 package com.marshmallow.hiring.instructions;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.marshmallow.hiring.instructions.exception.InvalidArgumentException;
 import com.marshmallow.hiring.instructions.exception.InvalidMovementException;
 import com.marshmallow.hiring.instructions.model.GeneralErrorResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.NestedRuntimeException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -31,6 +30,7 @@ public class InstructionsExceptionHandler extends ResponseEntityExceptionHandler
   private static final String INVALID_MOVEMENT_MESSAGE = "The provided instructions would lead the cleaner out of the specified cleaning area. Please check them and try again as we don't want to waste drones recovering lost cleaners...";
   private static final String PARSING_ERROR = "An error occurred while parsing the request body";
   private static final String GENERIC_INTERNAL_ERROR = "An internal error occurred";
+  private static final String MALFORMED_JSON_REQUEST = "Malformed JSON request";
 
   /**
    * Provides handling of {@link InvalidArgumentException}
@@ -106,6 +106,22 @@ public class InstructionsExceptionHandler extends ResponseEntityExceptionHandler
             .build());
   }
 
+  @Override
+  protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
+      HttpHeaders headers, HttpStatus status, WebRequest request) {
+    log.error(
+        "Spring Validation caught HttpMessageNotReadableException. Mapping to error response...",
+        ex);
+
+    return ResponseEntity
+        .status(HttpStatus.BAD_REQUEST)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(GeneralErrorResponse.builder()
+            .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
+            .message(MALFORMED_JSON_REQUEST)
+            .build());
+  }
+
   /**
    * Provides handling of Generic Exception.
    *
@@ -127,7 +143,7 @@ public class InstructionsExceptionHandler extends ResponseEntityExceptionHandler
 
   /**
    * Overrides default Spring behaviour and return JSON error response in case of exceptions
-   * generated inside the framework (i.e.: a custom JsonDeserializer).
+   * generated inside the framework.
    */
   @Override
   protected ResponseEntity<Object> handleExceptionInternal(
@@ -140,25 +156,13 @@ public class InstructionsExceptionHandler extends ResponseEntityExceptionHandler
   // Visible for testing
   protected ResponseEntity<Object> buildResponseEntityFromInternalError(Exception ex,
       HttpHeaders headers, HttpStatus status) {
-    String message = GENERIC_INTERNAL_ERROR;
-
-    // If root cause was thrown by our custom deserializer, include its explanation message
-    if (ex instanceof NestedRuntimeException) {
-      NestedRuntimeException httpEx = (NestedRuntimeException) ex;
-      Throwable root = httpEx.getRootCause();
-      if (root instanceof InvalidArgumentException) {
-        message = INVALID_ARGUMENT_PREFIX + root.getMessage();
-      } else if (root instanceof JsonParseException) {
-        message = PARSING_ERROR;
-      }
-    }
 
     return ResponseEntity.status(status)
         .contentType(MediaType.APPLICATION_JSON)
         .headers(headers)
         .body(GeneralErrorResponse.builder()
             .error(status.getReasonPhrase())
-            .message(message)
+            .message(GENERIC_INTERNAL_ERROR)
             .build());
   }
 }
